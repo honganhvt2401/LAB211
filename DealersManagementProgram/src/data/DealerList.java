@@ -89,9 +89,10 @@ public class DealerList extends ArrayList<Dealer> {
         String addr;
         String phone;
         boolean continuing;
+        String quoteID = "ID of new dealer: ";
         int pos;
         do {
-            ID = MyTool.readPattern("ID of new dealer: ", Dealer.ID_FORMAT);
+            ID = MyTool.readPattern(quoteID, Dealer.ID_FORMAT);
             ID = ID.toUpperCase();
             pos = searchDealer(ID);
             if (pos >= 0) {
@@ -147,10 +148,12 @@ public class DealerList extends ArrayList<Dealer> {
             }
             String newPhone = "";
             System.out.print("new phone, ENTER for omitting: ");
-            newPhone = MyTool.readPattern("new phone, ENTER for omitting: ", Dealer.PHONE_FORMAT);
+            newPhone = MyTool.SC.nextLine();
             if (!newPhone.isEmpty()) {
-                d.setPhone(newPhone);
-                changed = true;
+                if(MyTool.validStr(newPhone, Dealer.PHONE_FORMAT)){
+                    d.setPhone(newPhone);
+                    changed = true;
+                }
             }
         }
     }
@@ -159,7 +162,9 @@ public class DealerList extends ArrayList<Dealer> {
         if (this.isEmpty()) {
             System.out.println("Empty list!");
         } else {
-            System.out.println(this);
+            for(int i = 0; i < this.size(); i++){
+                System.out.println(this.get(i));
+            }
         }
     }
 
