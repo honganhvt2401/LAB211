@@ -22,18 +22,17 @@ public class LogIn {
     }
 
     public static Account inputAccount() {
-        String inputAccName;
-        String inputPass;
-        String inputRole;
+        String inputAccName,inputPass, inputRole;
         System.out.println("Please Login to System.");
         System.out.print("Your account name: ");
-        inputAccName = MyTool.SC.nextLine();
+        inputAccName = MyTool.SC.nextLine().trim();
         System.out.print("Your password: ");
-        inputPass = MyTool.SC.nextLine();
+        inputPass = MyTool.SC.nextLine().trim();
         System.out.print("Your role: ");
-        inputRole = MyTool.SC.nextLine();
+        inputRole = MyTool.SC.nextLine().trim();
         Account inputAcc = new Account(inputAccName, inputPass, inputRole);
         return inputAcc;
+        
     }
 
     public Account getAcc() {
@@ -53,6 +52,9 @@ public class LogIn {
             }
             if (!valid && !cont) {
                 System.exit(0);
+            }
+            if(valid == true){
+                break;
             }
         } while (cont);
         LogIn loginObj = new LogIn(acc);
