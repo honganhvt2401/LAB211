@@ -85,7 +85,7 @@ public class Dealer implements Comparable<Dealer> {
 
     @Override
     public int compareTo(Dealer o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.getID().compareToIgnoreCase(o.getID());
     }
 
 }

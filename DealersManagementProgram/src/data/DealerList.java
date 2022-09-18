@@ -19,9 +19,10 @@ public class DealerList extends ArrayList<Dealer> {
     private static final String PHONEPATTERN = "\\d{9}|\\d{11}";
     private String dataFile = "";
     boolean changed = false;
-    
-    public DealerList(){}
-    
+
+    public DealerList() {
+    }
+
     public DealerList(LogIn loginObj) {
         this.loginObj = loginObj;
     }
@@ -89,19 +90,38 @@ public class DealerList extends ArrayList<Dealer> {
         String addr;
         String phone;
         boolean continuing;
-        String quoteID = "ID of new dealer: ";
         int pos;
+        MyTool.SC.nextLine();
         do {
-            ID = MyTool.readPattern(quoteID, Dealer.ID_FORMAT);
-            ID = ID.toUpperCase();
+            ID = MyTool.readPattern("ID of new dealer: ", Dealer.ID_FORMAT).toUpperCase();
+            if (ID.isEmpty()) {
+                System.out.println("Invalid input, try again");
+                addDealer();
+            }
+
             pos = searchDealer(ID);
             if (pos >= 0) {
                 System.out.println("ID is duplicated!");
             }
         } while (pos >= 0);
-        name = MyTool.readNonBlank("Name of new dealer: ").toUpperCase();
-        addr = MyTool.readNonBlank("Address of new dealer: ");
-        phone = MyTool.readPattern("Phone number: ", Dealer.PHONE_FORMAT);
+        do {
+            name = MyTool.readNonBlank("Name of new dealer: ").toUpperCase();
+            if (name.equals("\\n")) {
+                System.out.println("Invalid input, try again");
+            }
+        } while (name.equals(""));
+        do {
+            addr = MyTool.readNonBlank("Address of new dealer: ");
+            if(addr.equals("\\n")){
+                System.out.println("Invalid input, try again");
+            }
+        } while (addr.equals(""));
+        do {
+            phone = MyTool.readPattern("Phone number: ", Dealer.PHONE_FORMAT);
+            if(phone.equals("\\n")){
+                System.out.println("Invalid input, try again");
+            }
+        } while (phone.equals(""));
         continuing = true;
         Dealer d = new Dealer(ID, name, addr, phone, continuing);
         this.add(d);
@@ -125,6 +145,7 @@ public class DealerList extends ArrayList<Dealer> {
 
     public void updateDealer() {
         String inputID;
+        MyTool.SC.nextLine();
         inputID = MyTool.readPattern("Enter ID: ", Dealer.ID_FORMAT);
         int pos;
         pos = searchDealer(inputID);
@@ -150,7 +171,7 @@ public class DealerList extends ArrayList<Dealer> {
             System.out.print("new phone, ENTER for omitting: ");
             newPhone = MyTool.SC.nextLine();
             if (!newPhone.isEmpty()) {
-                if(MyTool.validStr(newPhone, Dealer.PHONE_FORMAT)){
+                if (MyTool.validStr(newPhone, Dealer.PHONE_FORMAT)) {
                     d.setPhone(newPhone);
                     changed = true;
                 }
@@ -162,7 +183,7 @@ public class DealerList extends ArrayList<Dealer> {
         if (this.isEmpty()) {
             System.out.println("Empty list!");
         } else {
-            for(int i = 0; i < this.size(); i++){
+            for (int i = 0; i < this.size(); i++) {
                 System.out.println(this.get(i));
             }
         }

@@ -13,7 +13,7 @@ import java.io.*;
  * @author VU HONG ANH
  */
 public class MyTool {
-    public static final Scanner SC = new Scanner(System.in);
+    public static Scanner SC = new Scanner(System.in);
     
     public static boolean validStr(String str, String regEx){
         if(str.matches(regEx)){
@@ -64,14 +64,29 @@ public class MyTool {
     }
     
     public static String readPattern(String message, String pattern){
-        String input = "";
+        String input;
         boolean valid;
-        do{
+        Scanner sc = new Scanner(System.in);
+        System.out.print(message);
+        input = sc.nextLine().trim();
+        if(input.isEmpty()){
+            System.out.println("Invalid input, try again");
+            readPattern(message, pattern);
+        } else valid = validStr(input, pattern);
+        if(valid = false){
+            readPattern(message, pattern);
+        }
+        return input;
+        /*do{
             System.out.print(message);
             input = SC.nextLine().trim();
+            if(input.isEmpty()){
+                System.out.println("Invalid input. Try again.");
+                readPattern(message, pattern);
+            }
             valid = validStr(input, pattern);
         } while(!valid);
-        return input;
+        return input;*/
     }
     
     public static boolean readBool(String message){

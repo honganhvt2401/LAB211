@@ -7,6 +7,7 @@ package mng;
 import data.Account;
 import data.AccountChecker;
 import data.DealerList;
+import java.util.Arrays;
 import tools.MyTool;
 
 /**
@@ -22,17 +23,22 @@ public class LogIn {
     }
 
     public static Account inputAccount() {
-        String inputAccName,inputPass, inputRole;
+        String inputAccName, inputPass, inputRole;
         System.out.println("Please Login to System.");
-        System.out.print("Your account name: ");
-        inputAccName = MyTool.SC.nextLine().trim();
-        System.out.print("Your password: ");
-        inputPass = MyTool.SC.nextLine().trim();
-        System.out.print("Your role: ");
-        inputRole = MyTool.SC.nextLine().trim();
+        do {
+            System.out.print("Your account name: ");
+            inputAccName = MyTool.SC.nextLine().trim();
+        } while (inputAccName.isEmpty());
+        do {
+            System.out.print("Your password: ");
+            inputPass = MyTool.SC.nextLine().trim();
+        } while (inputPass.isEmpty());
+        do {
+            System.out.print("Your role: ");
+            inputRole = MyTool.SC.nextLine().trim();
+        } while (inputRole.isEmpty());
         Account inputAcc = new Account(inputAccName, inputPass, inputRole);
         return inputAcc;
-        
     }
 
     public Account getAcc() {
@@ -53,7 +59,7 @@ public class LogIn {
             if (!valid && !cont) {
                 System.exit(0);
             }
-            if(valid == true){
+            if (valid == true) {
                 break;
             }
         } while (cont);
@@ -85,8 +91,12 @@ public class LogIn {
                     case 5:
                         dList.printAllDealers();
                         break;
-                    case 6: dList.printContinuingDealers(); break;
-                    case 7: dList.printUnContinuingDealers(); break;
+                    case 6:
+                        dList.printContinuingDealers();
+                        break;
+                    case 7:
+                        dList.printUnContinuingDealers();
+                        break;
                     case 8:
                         dList.writeDealerToFile();
                         break;
