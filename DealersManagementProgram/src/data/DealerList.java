@@ -95,7 +95,7 @@ public class DealerList extends ArrayList<Dealer> {
         do {
             ID = MyTool.readPattern("ID of new dealer: ", Dealer.ID_FORMAT).toUpperCase();
             if (ID.isEmpty()) {
-                System.out.println("Invalid input, try again");
+                System.out.println("Input must follow this form: D*** (*: is number)");
                 addDealer();
             }
 
@@ -107,19 +107,19 @@ public class DealerList extends ArrayList<Dealer> {
         do {
             name = MyTool.readNonBlank("Name of new dealer: ").toUpperCase();
             if (name.equals("\\n")) {
-                System.out.println("Invalid input, try again");
+                System.out.println("Input must not be empty, try again");
             }
         } while (name.equals(""));
         do {
             addr = MyTool.readNonBlank("Address of new dealer: ");
             if(addr.equals("\\n")){
-                System.out.println("Invalid input, try again");
+                System.out.println("Input must not be empty, try again");
             }
         } while (addr.equals(""));
         do {
             phone = MyTool.readPattern("Phone number: ", Dealer.PHONE_FORMAT);
             if(phone.equals("\\n")){
-                System.out.println("Invalid input, try again");
+                System.out.println("Input must not be empty, try again");
             }
         } while (phone.equals(""));
         continuing = true;
