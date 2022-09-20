@@ -74,13 +74,17 @@ public class DealerList extends ArrayList<Dealer> {
 
     public void searchDealer() {
         String inputID;
-        inputID = MyTool.readPattern("Enter ID: ", Dealer.ID_FORMAT);
+        inputID = MyTool.readPattern("Enter ID: ", Dealer.ID_FORMAT).toUpperCase();
         int pos;
         pos = searchDealer(inputID);
         if (pos < 0) {
             System.out.println("Not found!");
         } else {
-            System.out.print("Dealer: " + this.get(pos));
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", this.get(pos).getID(), this.get(pos).getName(), this.get(pos).getAddr(), this.get(pos).getPhone(), this.get(pos).isContinuing());
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
         }
     }
 
@@ -183,8 +187,13 @@ public class DealerList extends ArrayList<Dealer> {
         if (this.isEmpty()) {
             System.out.println("Empty list!");
         } else {
-            for (int i = 0; i < this.size(); i++) {
-                System.out.println(this.get(i));
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (Dealer dealer : this) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", dealer.getID(), dealer.getName(), dealer.getAddr(), dealer.getPhone(), dealer.isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
             }
         }
     }
