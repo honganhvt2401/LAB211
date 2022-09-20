@@ -28,22 +28,22 @@ public class LogIn {
         do {
             System.out.print("Your account name: ");
             inputAccName = MyTool.SC.nextLine().trim();
-            if (inputAccName.isEmpty()) {
-                System.out.println("Account name must not be empty, try again");
+            if(inputAccName.isEmpty()){
+                System.out.println("Invalid input, try again");
             }
         } while (inputAccName.isEmpty());
         do {
             System.out.print("Your password: ");
             inputPass = MyTool.SC.nextLine().trim();
-            if (inputPass.isEmpty()) {
-                System.out.println("Password must not be empty, try again");
+            if(inputPass.isEmpty()){
+                System.out.println("Invalid input, try again");
             }
         } while (inputPass.isEmpty());
         do {
             System.out.print("Your role: ");
             inputRole = MyTool.SC.nextLine().trim();
-            if (inputRole.isEmpty()) {
-                System.out.println("Role must not be empty, try again");
+            if(inputRole.isEmpty()){
+                System.out.println("Invalid input, try again");
             }
         } while (inputRole.isEmpty());
         Account inputAcc = new Account(inputAccName, inputPass, inputRole);
@@ -84,10 +84,6 @@ public class LogIn {
             int choice = 0;
             do {
                 choice = menu.getChoice("Managing dealers");
-                if (getChoice.isEmpty()){
-                    System.out.println("Input must not be empty, try again");
-                }
-                else{
                 switch (choice) {
                     case 1:
                         dList.addDealer();
@@ -121,8 +117,7 @@ public class LogIn {
                             }
                         }
                 }
-            } while (choice > 0 && choice <= menu.size()&&!choice.isEmpty());
-            }
+            } while (choice > 0 && choice <= menu.size());
             System.out.println("Bye.");
         }
     }
