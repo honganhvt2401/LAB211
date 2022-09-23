@@ -338,9 +338,9 @@ public class DealerList extends ArrayList<Dealer> {
         List<Dealer> tempList = new ArrayList<Dealer>();
         String inputPhone;
         MyTool.SC.nextLine();
-        inputPhone = MyTool.readPattern("Enter phone number: ", Dealer.PHONE_FORMAT);
+        inputPhone = MyTool.readNonBlank("Enter phone number: ");
         for (int i = 0; i < this.size(); i++) {
-            if (this.get(i).getPhone().equals(inputPhone)) {
+            if (this.get(i).getPhone().contains(inputPhone)) {
                 tempList.add(this.get(i));
             }
         }
