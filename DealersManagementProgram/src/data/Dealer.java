@@ -13,7 +13,7 @@ import tools.MyTool;
 public class Dealer implements Comparable<Dealer> {
 
     public static final char SEPERATOR = ',';
-    public static final String ID_FORMAT = "D\\d{3}";
+    public static final String ID_FORMAT = "D|D\\d{3}";
     public static final String PHONE_FORMAT = "\\d{9}|\\d{11}";
     private String ID;
     private String name;
@@ -23,8 +23,8 @@ public class Dealer implements Comparable<Dealer> {
 
     public Dealer(String ID, String name, String addr, String phone, boolean continuing) {
         this.ID = ID;
-        this.name = name;
-        this.addr = addr;
+        this.name = name.toUpperCase();
+        this.addr = addr.toUpperCase();
         this.phone = phone;
         this.continuing = continuing;
     }
@@ -32,8 +32,8 @@ public class Dealer implements Comparable<Dealer> {
     public Dealer(String line) {
         String[] parts = line.split("" + this.SEPERATOR);
         ID = parts[0].trim();
-        name = parts[1].trim();
-        addr = parts[2].trim();
+        name = parts[1].trim().toUpperCase();
+        addr = parts[2].trim().toUpperCase();
         phone = parts[3].trim();
         continuing = MyTool.parseBool(parts[4]);
     }
@@ -51,7 +51,7 @@ public class Dealer implements Comparable<Dealer> {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toUpperCase();
     }
 
     public String getAddr() {

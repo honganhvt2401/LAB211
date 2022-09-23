@@ -73,19 +73,46 @@ public class DealerList extends ArrayList<Dealer> {
     }
 
     public void searchDealer() {
-        String inputID;
-        inputID = MyTool.readPattern("Enter ID: ", Dealer.ID_FORMAT).toUpperCase();
+        int searchChoice = 0;
+        do {
+            System.out.println("------------------------------[SEARCH MENU]----------------------------------");
+            System.out.println("   1-Search by ID");
+            System.out.println("   2-Search by name");
+            System.out.println("   3-Search by address");
+            System.out.println("   4-Search by phone number");
+            System.out.println("   Others-Return to menu");
+            System.out.print("Choose [1..4]: ");
+            searchChoice = MyTool.SC.nextInt();
+            switch (searchChoice) {
+                case 1:
+                    searchByID();
+                    break;
+                case 2:
+                    searchByName();
+                    break;
+                case 3:
+                    searchByAddress();
+                    break;
+                case 4:
+                    searchByPhone();
+                    break;
+            }
+        } while (searchChoice > 0 && searchChoice <= 4);
+        /*String inputID;
+        inputID = MyTool.readPattern("Enter ID: ", Dealer.ID_FORMAT);
         int pos;
         pos = searchDealer(inputID);
         if (pos < 0) {
-            System.out.println("Not found!");
+            if(inputID.equals("D")){
+                printAllDealers();
+            } else System.out.println("Not found!");
         } else {
             System.out.println("+----------+----------+--------------------+---------------+----------------+");
             System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
             System.out.println("+----------+----------+--------------------+---------------+----------------+");
             System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", this.get(pos).getID(), this.get(pos).getName(), this.get(pos).getAddr(), this.get(pos).getPhone(), this.get(pos).isContinuing());
             System.out.println("+----------+----------+--------------------+---------------+----------------+");
-        }
+        }*/
     }
 
     public void addDealer() {
@@ -99,7 +126,7 @@ public class DealerList extends ArrayList<Dealer> {
         do {
             ID = MyTool.readPattern("ID of new dealer: ", Dealer.ID_FORMAT).toUpperCase();
             if (ID.isEmpty()) {
-                System.out.println("Input must follow this form: D*** (*: is number)");
+                System.out.println("Invalid input (Format: D***, * is a number(0-9)), try again");
                 addDealer();
             }
 
@@ -111,19 +138,19 @@ public class DealerList extends ArrayList<Dealer> {
         do {
             name = MyTool.readNonBlank("Name of new dealer: ").toUpperCase();
             if (name.equals("\\n")) {
-                System.out.println("Input must not be empty, try again");
+                System.out.println("Invalid input, try again");
             }
         } while (name.equals(""));
         do {
             addr = MyTool.readNonBlank("Address of new dealer: ");
-            if(addr.equals("\\n")){
-                System.out.println("Input must not be empty, try again");
+            if (addr.equals("\\n")) {
+                System.out.println("Invalid input, try again");
             }
         } while (addr.equals(""));
         do {
             phone = MyTool.readPattern("Phone number: ", Dealer.PHONE_FORMAT);
-            if(phone.equals("\\n")){
-                System.out.println("Input must not be empty, try again");
+            if (phone.equals("\\n")) {
+                System.out.println("Invalid input, try again");
             }
         } while (phone.equals(""));
         continuing = true;
@@ -134,17 +161,25 @@ public class DealerList extends ArrayList<Dealer> {
     }
 
     public void removeDealer() {
-        String inputID;
-        inputID = MyTool.readPattern("Enter ID: ", Dealer.ID_FORMAT);
-        int pos;
-        pos = searchDealer(inputID);
-        if (pos < 0) {
-            System.out.println("Not found!");
-        } else {
-            this.get(pos).setContinuing(false);
-            System.out.println("Removed");
-            changed = true;
-        }
+        int removeChoice = 0;
+        do {
+            System.out.println("-------------------------------[REMOVE MENU]---------------------------------");
+            System.out.println("   1-Remove continuing status");
+            System.out.println("   2-Remove dealer permanently from the program");
+            System.out.println("   Others-Return to menu");
+            System.out.print("Choose [1..2]: ");
+            removeChoice = MyTool.SC.nextInt();
+            switch (removeChoice) {
+                case 1:
+                    remover(1);
+                    break;
+                case 2:
+                    remover(2);
+                    break;
+            }
+        } while (removeChoice > 0 && removeChoice <= 2);
+        /*
+         */
     }
 
     public void updateDealer() {
@@ -180,6 +215,14 @@ public class DealerList extends ArrayList<Dealer> {
                     changed = true;
                 }
             }
+            String newContinuing;
+            System.out.print("update continuing, Enter for omitting: ");
+            newContinuing = MyTool.SC.nextLine();
+            if (!newContinuing.isEmpty()) {
+                Boolean s = Boolean.parseBoolean(newContinuing);
+                d.setContinuing(s);
+                changed = true;
+            }
         }
     }
 
@@ -194,7 +237,6 @@ public class DealerList extends ArrayList<Dealer> {
                 System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", dealer.getID(), dealer.getName(), dealer.getAddr(), dealer.getPhone(), dealer.isContinuing());
             }
             System.out.println("+----------+----------+--------------------+---------------+----------------+");
-            }
         }
     }
 
@@ -207,10 +249,8 @@ public class DealerList extends ArrayList<Dealer> {
     }
 
     public void writeDealerToFile() {
-        if (changed) {
-            MyTool.writeFile(dataFile, this);
-            changed = false;
-        }
+        MyTool.writeFile(dataFile, this);
+        changed = false;
     }
 
     public boolean isChanged() {
@@ -219,5 +259,416 @@ public class DealerList extends ArrayList<Dealer> {
 
     public void setChanged(boolean changed) {
         this.changed = changed;
+    }
+
+    public void searchByID() {
+        List<Dealer> tempList = new ArrayList<Dealer>();
+        String inputID;
+        MyTool.SC.nextLine();
+        inputID = MyTool.readNonBlank("Enter ID: ").toUpperCase();
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getID().contains(inputID)) {
+                tempList.add(this.get(i));
+            }
+        }
+        if (tempList.size() <= 0) {
+            boolean b = MyTool.readBool("No dealers found! Would you like to try again? ");
+            if (b = true) {
+                searchByID();
+            } else {
+                searchDealer();
+            }
+        } else {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (int i = 0; i < tempList.size(); i++) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", tempList.get(i).getID(), tempList.get(i).getName(), tempList.get(i).getAddr(), tempList.get(i).getPhone(), tempList.get(i).isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+        }
+        /*int pos;
+        pos = searchDealer(inputID);
+        if (pos < 0) {
+            if (inputID.equals("D")) {
+                printAllDealers();
+            } else {
+                System.out.println("Not found!");
+            }
+        } else {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", this.get(pos).getID(), this.get(pos).getName(), this.get(pos).getAddr(), this.get(pos).getPhone(), this.get(pos).isContinuing());
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+        }*/
+    }
+
+    public void searchByName() {
+        System.out.println("-----------------------------------------------------------------------------");
+        List<Dealer> tempList = new ArrayList<Dealer>();
+        String inputName;
+        MyTool.SC.nextLine();
+        inputName = MyTool.readNonBlank("Enter name: ").toUpperCase();
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getName().contains(inputName)) {
+                tempList.add(this.get(i));
+            }
+        }
+        if (tempList.size() != 0) {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (int i = 0; i < tempList.size(); i++) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", tempList.get(i).getID(), tempList.get(i).getName(), tempList.get(i).getAddr(), tempList.get(i).getPhone(), tempList.get(i).isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+        } else {
+            boolean redo = MyTool.readBool("Dealer(s) not found! Would you like to try again? ");
+            if (redo = true) {
+                searchByName();
+            } else {
+                searchDealer();
+            }
+        }
+    }
+
+    public void searchByPhone() {
+        System.out.println("-----------------------------------------------------------------------------");
+        List<Dealer> tempList = new ArrayList<Dealer>();
+        String inputPhone;
+        MyTool.SC.nextLine();
+        inputPhone = MyTool.readPattern("Enter phone number: ", Dealer.PHONE_FORMAT);
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getPhone().equals(inputPhone)) {
+                tempList.add(this.get(i));
+            }
+        }
+        if (tempList.size() != 0) {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (int i = 0; i < tempList.size(); i++) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", tempList.get(i).getID(), tempList.get(i).getName(), tempList.get(i).getAddr(), tempList.get(i).getPhone(), tempList.get(i).isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+        } else {
+            boolean redo = MyTool.readBool("Dealer(s) not found! Would you like to try again? ");
+            if (redo = true) {
+                searchByPhone();
+            } else {
+                searchDealer();
+            }
+        }
+    }
+
+    public void searchByAddress() {
+        System.out.println("-----------------------------------------------------------------------------");
+        List<Dealer> tempList = new ArrayList<Dealer>();
+        String inputAddr;
+        MyTool.SC.nextLine();
+        inputAddr = MyTool.readNonBlank("Enter address: ").toUpperCase();
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getAddr().contains(inputAddr)) {
+                tempList.add(this.get(i));
+            }
+        }
+        if (tempList.size() != 0) {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (int i = 0; i < tempList.size(); i++) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", tempList.get(i).getID(), tempList.get(i).getName(), tempList.get(i).getAddr(), tempList.get(i).getPhone(), tempList.get(i).isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+        } else {
+            boolean redo = MyTool.readBool("Dealer(s) not found! Would you like to try again? ");
+            if (redo = true) {
+                searchByAddress();
+            } else {
+                searchDealer();
+            }
+        }
+    }
+
+    //remover in progress
+    public void remover(int change) {
+        List<String> falseMenu = new ArrayList<String>();
+        int tempChoice = 0;
+        falseMenu.add("Remove by ID");
+        falseMenu.add("Remove by name");
+        falseMenu.add("Remove by address");
+        falseMenu.add("Remove by phone number");
+        do {
+            System.out.println("----------------------------[METHODS OF REMOVING]----------------------------");
+            for (int i = 0; i < falseMenu.size(); i++) {
+                System.out.println("   " + (i + 1) + "-" + falseMenu.get(i));
+            }
+            System.out.println("   Others-Return to menu");
+            System.out.print("Choose [1..4]: ");
+            tempChoice = MyTool.SC.nextInt();
+            switch (tempChoice) {
+                case 1:
+                    removeByID(change);
+                    break;
+                case 2:
+                    removeByName(change);
+                    break;
+                case 3:
+                    removeByAddress(change);
+                    break;
+                case 4:
+                    removeByPhone(change);
+                    break;
+            }
+        } while (tempChoice > 0 && tempChoice <= 4);
+    }
+
+    public void removeByID(int sign) {
+        String inputID;
+        MyTool.SC.nextLine();
+        inputID = MyTool.readPattern("Enter ID: ", Dealer.ID_FORMAT);
+        int pos;
+        pos = searchDealer(inputID);
+        if (sign == 1) {
+            if (pos < 0) {
+                boolean b = MyTool.parseBool("Dealer(s) not found. Do you want to try again?");
+                if (b = true) {
+                    removeByID(sign);
+                } else {
+                    removeDealer();
+                }
+            } else {
+                this.get(pos).setContinuing(false);
+                System.out.println("Removed dealer " + inputID + "'s continuing status");
+            }
+        }
+        if (sign == 2) {
+            if (pos < 0) {
+                boolean b = MyTool.parseBool("Dealer(s) not found. Do you want to try again?");
+                if (b = true) {
+                    removeByID(sign);
+                } else {
+                    removeDealer();
+                }
+            } else {
+                this.remove(this.get(pos));
+                System.out.println("Permanently removed dealer " + inputID + ".");
+            }
+        } else {
+            boolean b = MyTool.readBool("No dealer found! Would you like to try again? ");
+            if(b = true){
+                removeByAddress(sign);
+            } else {
+                removeDealer();
+            }
+        }
+    }
+
+    public void removeByName(int sign) {
+        List<Dealer> tempList = new ArrayList<Dealer>();
+        String inputName;
+        MyTool.SC.nextLine();
+        inputName = MyTool.readNonBlank("Enter name: ").toUpperCase();
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getName().contains(inputName)) {
+                tempList.add(this.get(i));
+            }
+        }
+        if (tempList.size() != 0) {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (int i = 0; i < tempList.size(); i++) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", tempList.get(i).getID(), tempList.get(i).getName(), tempList.get(i).getAddr(), tempList.get(i).getPhone(), tempList.get(i).isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            int option;
+            System.out.print("Choose dealer you want to delete [1.." + tempList.size() + "] (0 for all): ");
+            option = MyTool.SC.nextInt();
+            if (option < 0) {
+                System.out.println("Invalid input, try again from the beginning");
+                removeByName(sign);
+            }
+            if (option == 0) {
+                if (sign == 1) {
+                    for (int i = 0; i < this.size(); i++) {
+                        for (int j = 0; j < tempList.size(); j++) {
+                            if (this.get(i).getName().equals(tempList.get(j).getName())) {
+                                this.get(i).setContinuing(false);
+                            }
+                        }
+                    }
+                } else if (sign == 2) {
+                    for (int i = 0; i < this.size(); i++) {
+                        for (int j = 0; j < tempList.size(); j++) {
+                            if (this.get(i).getName().equals(tempList.get(j).getName())) {
+                                this.remove(this.get(i));
+                            }
+                        }
+                    }
+                }
+            }//
+            if (option > 0) {
+                if (sign == 1) {
+                    for (int i = 0; i < this.size(); i++) {
+                        if (this.get(i).getName().equals(tempList.get(option - 1).getName())) {
+                            this.get(i).setContinuing(false);
+                        }
+                    }
+                } else if (sign == 2) {
+                    for (int i = 0; i < this.size(); i++) {
+                        if (this.get(i).getName().equals(tempList.get(option - 1).getName())) {
+                            this.remove(this.get(i));
+                        }
+                    }
+                }
+            }//
+        } else {
+            boolean b = MyTool.readBool("No dealer found! Would you like to try again? ");
+            if(b = true){
+                removeByAddress(sign);
+            } else {
+                removeDealer();
+            }
+        }
+    }
+
+    public void removeByAddress(int sign) {
+        List<Dealer> tempList = new ArrayList<Dealer>();
+        String inputAddr;
+        MyTool.SC.nextLine();
+        inputAddr = MyTool.readNonBlank("Enter address: ").toUpperCase();
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getAddr().contains(inputAddr)) {
+                tempList.add(this.get(i));
+            }
+        }
+        if (tempList.size() != 0) {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (int i = 0; i < tempList.size(); i++) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", tempList.get(i).getID(), tempList.get(i).getName(), tempList.get(i).getAddr(), tempList.get(i).getPhone(), tempList.get(i).isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            int option;
+            System.out.print("Choose dealer you want to delete [1.." + tempList.size() + "] (0 for all): ");
+            option = MyTool.SC.nextInt();
+            if (option < 0) {
+                System.out.println("Invalid input, try again from the beginning");
+                removeByName(sign);
+            }
+            if (option == 0) {
+                if (sign == 1) {
+                    for (int i = 0; i < this.size(); i++) {
+                        for (int j = 0; j < tempList.size(); j++) {
+                            if (this.get(i).getName().equals(tempList.get(j).getName())) {
+                                this.get(i).setContinuing(false);
+                            }
+                        }
+                    }
+                } else if (sign == 2) {
+                    for (int i = 0; i < this.size(); i++) {
+                        for (int j = 0; j < tempList.size(); j++) {
+                            if (this.get(i).getName().equals(tempList.get(j).getName())) {
+                                this.remove(this.get(i));
+                            }
+                        }
+                    }
+                }
+            }//
+            if (option > 0) {
+                if (sign == 1) {
+                    for (int i = 0; i < this.size(); i++) {
+                        if (this.get(i).getName().equals(tempList.get(option - 1).getName())) {
+                            this.get(i).setContinuing(false);
+                        }
+                    }
+                } else if (sign == 2) {
+                    for (int i = 0; i < this.size(); i++) {
+                        if (this.get(i).getName().equals(tempList.get(option - 1).getName())) {
+                            this.remove(this.get(i));
+                        }
+                    }
+                }
+            }//
+        } else {
+            boolean b = MyTool.readBool("No dealer found! Would you like to try again? ");
+            if(b = true){
+                removeByAddress(sign);
+            } else {
+                removeDealer();
+            }
+        }
+    }
+
+    public void removeByPhone(int sign) {
+        List<Dealer> tempList = new ArrayList<Dealer>();
+        String inputPhone;
+        MyTool.SC.nextLine();
+        inputPhone = MyTool.readNonBlank("Enter phone number: ").toUpperCase();
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getPhone().contains(inputPhone)) {
+                tempList.add(this.get(i));
+            }
+        }
+        if (tempList.size() != 0) {
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            System.out.println("|    ID    |   NAME   |      ADDRESS       |     PHONE     |   CONTINUING   |");
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            for (int i = 0; i < tempList.size(); i++) {
+                System.out.format("|%-10s|%-10s|%-20s|%-15s|%-16b|\n", tempList.get(i).getID(), tempList.get(i).getName(), tempList.get(i).getAddr(), tempList.get(i).getPhone(), tempList.get(i).isContinuing());
+            }
+            System.out.println("+----------+----------+--------------------+---------------+----------------+");
+            int option;
+            System.out.print("Choose dealer you want to delete [1.." + tempList.size() + "] (0 for all): ");
+            option = MyTool.SC.nextInt();
+            if (option < 0) {
+                System.out.println("Invalid input, try again from the beginning");
+                removeByName(sign);
+            }
+            if (option == 0) {
+                if (sign == 1) {
+                    for (int i = 0; i < this.size(); i++) {
+                        for (int j = 0; j < tempList.size(); j++) {
+                            if (this.get(i).getName().equals(tempList.get(j).getName())) {
+                                this.get(i).setContinuing(false);
+                            }
+                        }
+                    }
+                } else if (sign == 2) {
+                    for (int i = 0; i < this.size(); i++) {
+                        for (int j = 0; j < tempList.size(); j++) {
+                            if (this.get(i).getName().equals(tempList.get(j).getName())) {
+                                this.remove(this.get(i));
+                            }
+                        }
+                    }
+                }
+            }//
+            if (option > 0) {
+                if (sign == 1) {
+                    for (int i = 0; i < this.size(); i++) {
+                        if (this.get(i).getName().equals(tempList.get(option - 1).getName())) {
+                            this.get(i).setContinuing(false);
+                        }
+                    }
+                } else if (sign == 2) {
+                    for (int i = 0; i < this.size(); i++) {
+                        if (this.get(i).getName().equals(tempList.get(option - 1).getName())) {
+                            this.remove(this.get(i));
+                        }
+                    }
+                }
+            }//
+        } else {
+            boolean b = MyTool.readBool("No dealer found! Would you like to try again? ");
+            if(b = true){
+                removeByAddress(sign);
+            } else {
+                removeDealer();
+            }
+        }
     }
 }
